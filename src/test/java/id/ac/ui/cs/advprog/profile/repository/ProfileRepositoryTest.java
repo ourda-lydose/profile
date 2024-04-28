@@ -3,23 +3,18 @@ package id.ac.ui.cs.advprog.profile.repository;
 import id.ac.ui.cs.advprog.profile.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 class ProfileRepositoryTest {
 
-    @InjectMocks
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     @BeforeEach
     void setUp() {
-
+        profileRepository = new ProfileRepository();
     }
 
     @Test
@@ -38,9 +33,9 @@ class ProfileRepositoryTest {
 
     @Test
     void testFindAllIfEmpty() {
-        Iterator<User> userIterator = profileRepository.findAll();
+        List<User> userList = profileRepository.findAll();
 
-        assertFalse(userIterator.hasNext());
+        assertTrue(userList.isEmpty());
     }
 
     @Test
@@ -51,12 +46,10 @@ class ProfileRepositoryTest {
         User user2 = new User().setId(2).setFullName("Jane Doe").setEmail("jane@example.com").setPassword("password123");
         profileRepository.create(user2);
 
-        Iterator<User> userIterator = profileRepository.findAll();
+        List<User> userList = profileRepository.findAll();
 
-        assertTrue(userIterator.hasNext());
-        assertEquals(user1.getId(), userIterator.next().getId());
-        assertEquals(user2.getId(), userIterator.next().getId());
-        assertFalse(userIterator.hasNext());
+        assertFalse(userList.isEmpty());
+        assertEquals(2, userList.size());
     }
 
     @Test

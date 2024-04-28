@@ -2,7 +2,7 @@ package id.ac.ui.cs.advprog.profile.repository;
 
 import id.ac.ui.cs.advprog.profile.model.User;
 
-import java.util.Iterator;
+import java.util.List;
 
 public interface ProfileRepositoryInterface {
     User create(User user);
@@ -13,5 +13,5 @@ public interface ProfileRepositoryInterface {
 
     User findById(int id);
 
-    Iterator<User> findAll();
+    List<User> findAll();
 }
