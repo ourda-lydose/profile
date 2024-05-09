@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class ProfileServiceImpl implements  ProfileService{
@@ -15,7 +17,7 @@ public class ProfileServiceImpl implements  ProfileService{
     @Override
     public User create(User user){
         if (profileRepository.findById(user.getId()) == null) {
-            profileRepository.create(user);
+            profileRepository.save(user);
             return user;
         }
         return null;
@@ -29,23 +31,21 @@ public class ProfileServiceImpl implements  ProfileService{
     @Override
     public User edit(User user){
         if (profileRepository.findById(user.getId()) != null) {
-            profileRepository.edit(user);
+            profileRepository.save(user);
             return user;
         }
         return null;
     }
 
     @Override
-    public User delete(User user){
+    public void delete(User user){
         if (profileRepository.findById(user.getId()) != null) {
             profileRepository.delete(user);
-            return user;
         }
-        return null;
     }
 
     @Override
-    public User findById(int id){
+    public Optional<User> findById(int id){
         return profileRepository.findById(id);
     }
 }
