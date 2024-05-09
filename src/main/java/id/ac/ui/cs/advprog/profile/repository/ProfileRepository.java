@@ -8,5 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<User, String> {
+public interface ProfileRepository extends JpaRepository<User, Integer> {
+
 }
