@@ -11,5 +11,5 @@ public interface ProfileService {
     public List<User> findAll();
     public User edit(User user);
     public Optional<User> findById(int id);
-    public void delete(User user);
+    public void delete(int id);
 }

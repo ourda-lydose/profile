@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<User, Integer> {
-
+    void deleteById(int id);
 }

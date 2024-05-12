@@ -16,11 +16,8 @@ public class ProfileServiceImpl implements  ProfileService{
 
     @Override
     public User create(User user){
-        if (profileRepository.findById(user.getId()) == null) {
-            profileRepository.save(user);
-            return user;
-        }
-        return null;
+        profileRepository.save(user);
+        return user;
     }
 
     @Override
@@ -30,18 +27,13 @@ public class ProfileServiceImpl implements  ProfileService{
 
     @Override
     public User edit(User user){
-        if (profileRepository.findById(user.getId()) != null) {
-            profileRepository.save(user);
-            return user;
-        }
-        return null;
+        profileRepository.save(user);
+        return user;
     }
 
     @Override
-    public void delete(User user){
-        if (profileRepository.findById(user.getId()) != null) {
-            profileRepository.delete(user);
-        }
+    public void delete(int id){
+        profileRepository.deleteById(id);
     }
 
     @Override
