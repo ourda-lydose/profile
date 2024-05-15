@@ -3,11 +3,12 @@ package id.ac.ui.cs.advprog.profile.service;
 import id.ac.ui.cs.advprog.profile.model.User;
 import id.ac.ui.cs.advprog.profile.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ProfileServiceImpl implements  ProfileService{
@@ -15,29 +16,33 @@ public class ProfileServiceImpl implements  ProfileService{
     private ProfileRepository profileRepository;
 
     @Override
-    public User create(User user){
+    @Async
+    public CompletableFuture<User> create(User user){
         profileRepository.save(user);
-        return user;
+        return CompletableFuture.completedFuture(user);
     }
 
     @Override
-    public List<User> findAll(){
-        return profileRepository.findAll();
+    @Async
+    public CompletableFuture<List<User>> findAll(){
+        return CompletableFuture.completedFuture(profileRepository.findAll());
     }
 
     @Override
-    public User edit(User user){
+    @Async
+    public CompletableFuture<User> edit(User user){
         profileRepository.save(user);
-        return user;
+        return CompletableFuture.completedFuture(user);
     }
 
     @Override
-    public void delete(int id){
+    public CompletableFuture<Void> delete(int id){
         profileRepository.deleteById(id);
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public Optional<User> findById(int id){
-        return profileRepository.findById(id);
+    public CompletableFuture<Optional<User>> findById(int id){
+        return CompletableFuture.completedFuture(profileRepository.findById(id));
     }
 }
