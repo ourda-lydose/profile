@@ -36,12 +36,14 @@ public class ProfileServiceImpl implements  ProfileService{
     }
 
     @Override
+    @Async
     public CompletableFuture<Void> delete(int id){
         profileRepository.deleteById(id);
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
+    @Async
     public CompletableFuture<Optional<User>> findById(int id){
         return CompletableFuture.completedFuture(profileRepository.findById(id));
     }
