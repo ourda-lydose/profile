@@ -16,7 +16,7 @@ public class UserProfile {
     private String id;
 
     @Column(nullable = false)
-    private String fullName;
+    private String userName;
 
     @Column(unique = true, length = 100, nullable = false)
     private String email;
@@ -29,21 +29,21 @@ public class UserProfile {
     }
     public UserProfile(UserBuilder builder){
         this.id = UUID.randomUUID().toString();
-        this.fullName = builder.fullName;
+        this.userName = builder.userName;
         this.password = builder.password;
         this.email = builder.email;
     }
 
     public static class UserBuilder {
         // Required parameters
-        private String fullName;
+        private String userName;
         private String password;
 
         // Optional parameters
         private String email;
 
         public UserBuilder(String name, String password) {
-            this.fullName = name;
+            this.userName = name;
             this.password = password;
         }
 

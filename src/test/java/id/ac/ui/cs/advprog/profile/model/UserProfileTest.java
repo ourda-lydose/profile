@@ -24,8 +24,8 @@ class UserProfileTest {
     }
 
     @Test
-    void testGetFullName() {
-        assertEquals("John Doe", this.userProfile.getFullName());
+    void testgetUserName() {
+        assertEquals("John Doe", this.userProfile.getUserName());
     }
 
     @Test
@@ -47,8 +47,8 @@ class UserProfileTest {
 
     @Test
     void testSetFullName() {
-        this.userProfile.setFullName("Jane Doe");
-        assertEquals("Jane Doe", this.userProfile.getFullName());
+        this.userProfile.setUserName("Jane Doe");
+        assertEquals("Jane Doe", this.userProfile.getUserName());
     }
 
     @Test
