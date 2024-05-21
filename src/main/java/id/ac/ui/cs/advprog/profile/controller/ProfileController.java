@@ -1,6 +1,6 @@
 package id.ac.ui.cs.advprog.profile.controller;
 
-import id.ac.ui.cs.advprog.profile.model.User;
+import id.ac.ui.cs.advprog.profile.model.UserProfile;
 import id.ac.ui.cs.advprog.profile.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,14 +11,14 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/userprofile")
 public class ProfileController {
 
     @Autowired
     private ProfileService profileService;
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<Map<String, Object>>> createUser(@RequestBody User user) {
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> createUser(@RequestBody UserProfile user) {
         Map<String, Object> res = new HashMap<>();
         return profileService.create(user)
                 .thenApply(createdUser -> {
@@ -35,7 +35,7 @@ public class ProfileController {
     }
 
     @GetMapping("/{id}")
-    public CompletableFuture<ResponseEntity<?>> getUserById(@PathVariable("id") int id) {
+    public CompletableFuture<ResponseEntity<?>> getUserById(@PathVariable("id") String id) {
         Map<String, Object> response = new HashMap<>();
         return profileService.findById(id)
                 .thenApply(User -> {
@@ -56,7 +56,7 @@ public class ProfileController {
 
 
     @PutMapping("/{id}")
-    public CompletableFuture<ResponseEntity<Map<String, Object>>> editUser(@PathVariable("id") int id, @RequestBody User user) {
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> editUser(@PathVariable("id") String id, @RequestBody UserProfile user) {
         Map<String, Object> res = new HashMap<>();
         return profileService.edit(user)
                 .thenApply(updatedUser -> {
@@ -73,7 +73,7 @@ public class ProfileController {
     }
 
     @DeleteMapping("/{id}")
-    public CompletableFuture<ResponseEntity<Map<String, Object>>> deleteUser(@PathVariable("id") int id){
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> deleteUser(@PathVariable("id") String id){
         Map<String, Object> res = new HashMap<>();
         return profileService.delete(id)
                 .thenApply(result -> {
