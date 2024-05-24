@@ -8,10 +8,9 @@ import java.util.UUID;
 
 @Getter @Setter
 @Entity
-@Table(name = "userpprofile")
+@Table(name = "userprofile")
 public class UserProfile {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private String id;
 
@@ -24,6 +23,11 @@ public class UserProfile {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private int noTelp;
+
+    @Column(nullable = true)
+    private String alamat;
     public UserProfile() {
 
     }
@@ -32,6 +36,8 @@ public class UserProfile {
         this.userName = builder.userName;
         this.password = builder.password;
         this.email = builder.email;
+        this.noTelp = builder.noTelp;
+        this.alamat = builder.alamat;
     }
 
     public static class UserBuilder {
@@ -41,6 +47,8 @@ public class UserProfile {
 
         // Optional parameters
         private String email;
+        private int noTelp;
+        private String alamat;
 
         public UserBuilder(String name, String password) {
             this.userName = name;
@@ -52,6 +60,15 @@ public class UserProfile {
             return this;
         }
 
+        public UserBuilder setNoTelp(int noTelp){
+            this.noTelp = noTelp;
+            return this;
+        }
+
+        public UserBuilder setAlamat(String alamat) {
+            this.alamat = alamat;
+            return this;
+        }
         public UserProfile build() {
             return new UserProfile(this);
         }
