@@ -11,48 +11,52 @@ import java.util.UUID;
 @Table(name = "userprofile")
 public class UserProfile {
     @Id
-    @Column(nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", nullable = false)
+    private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "review_id")
+    private Long reviewId;
+
+    @Column(name = "box_id")
+    private String boxId;
+
+    @Column(name = "user_role", nullable = false)
+    private String role;
+
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(unique = true, length = 100, nullable = false)
+    @Column(name = "user_email", unique = true, length = 100, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "user_pass", nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private int noTelp;
-
-    @Column(nullable = true)
-    private String alamat;
     public UserProfile() {
 
     }
     public UserProfile(UserBuilder builder){
-        this.id = UUID.randomUUID().toString();
         this.userName = builder.userName;
         this.password = builder.password;
         this.email = builder.email;
-        this.noTelp = builder.noTelp;
-        this.alamat = builder.alamat;
+        this.role = builder.role;
     }
 
     public static class UserBuilder {
-        // Required parameters
         private String userName;
         private String password;
-
-        // Optional parameters
+        private String role;
         private String email;
-        private int noTelp;
-        private String alamat;
 
         public UserBuilder(String name, String password) {
             this.userName = name;
             this.password = password;
+        }
+
+        public UserBuilder setRole(String role){
+            this.role = role;
+            return this;
         }
 
         public UserBuilder setEmail(String email) {
@@ -60,15 +64,6 @@ public class UserProfile {
             return this;
         }
 
-        public UserBuilder setNoTelp(int noTelp){
-            this.noTelp = noTelp;
-            return this;
-        }
-
-        public UserBuilder setAlamat(String alamat) {
-            this.alamat = alamat;
-            return this;
-        }
         public UserProfile build() {
             return new UserProfile(this);
         }

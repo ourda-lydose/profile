@@ -54,6 +54,18 @@ public class ProfileController {
                 });
     }
 
+    @GetMapping
+    public CompletableFuture<ResponseEntity<List<UserProfile>>> findAllListings(){
+        return profileService.findAll()
+                .thenApplyAsync(profile -> ResponseEntity.ok(profile))
+                .exceptionally(exception -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                    response.put("error", exception.getCause() != null ? exception.getCause().getMessage() : "Unknown error");
+                    response.put("message", "Something went wrong with the server");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+                });
+    }
 
     @PutMapping("/{id}")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> editUser(@PathVariable("id") String id, @RequestBody UserProfile user) {
