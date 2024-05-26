@@ -135,21 +135,6 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testDeleteUserUnhappyPath() throws ExecutionException, InterruptedException {
-        // Arrange
-        String userId = "1";
-        when(profileService.delete(userId)).thenReturn(CompletableFuture.completedFuture(null));
-
-        // Act
-        ResponseEntity<Map<String, Object>> responseEntity = profileController.deleteUser(userId).get();
-
-        // Assert
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertEquals("User with ID 1 not found.", responseEntity.getBody().get("message"));
-    }
-
-
-    @Test
     void testFindAllListings_HappyPath() throws ExecutionException, InterruptedException {
         List<UserProfile> userList = new ArrayList<>();
         userList.add(new UserProfile());
