@@ -27,7 +27,9 @@ class ProfileServiceImplTest {
     ProfileRepository profileRepository;
 
     private UserProfile createUserProfile(String name, String email, String password) {
-        return new UserProfile.UserBuilder(name, password)
+        return new UserProfile.UserBuilder()
+                .setUserName(name)
+                .setPassword(password)
                 .setEmail(email)
                 .build();
     }
@@ -92,7 +94,7 @@ class ProfileServiceImplTest {
         Mockito.when(profileRepository.save(userProfile)).thenReturn(userProfile);
         profileService.create(userProfile);
 
-        UserProfile editedUserProfile = new UserProfile.UserBuilder("John Smith", "newpassword")
+        UserProfile editedUserProfile = new UserProfile.UserBuilder()
                 .setEmail("johnsmith@example.com")
                 .build();
         profileService.edit(editedUserProfile);

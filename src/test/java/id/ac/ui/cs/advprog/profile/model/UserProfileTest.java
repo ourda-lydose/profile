@@ -13,7 +13,7 @@ class UserProfileTest {
 
     @BeforeEach
     void setUp() {
-        this.builder = new UserProfile.UserBuilder("John Doe", "password123");
+        this.builder = new UserProfile.UserBuilder();
         this.userProfile = builder.setEmail("john.doe@example.com")
                 .build();
     }
