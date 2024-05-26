@@ -1,123 +1,108 @@
 package id.ac.ui.cs.advprog.profile.service;
 
-import id.ac.ui.cs.advprog.profile.model.UserProfile;
-import id.ac.ui.cs.advprog.profile.repository.ProfileRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import id.ac.ui.cs.advprog.profile.service.ProfileServiceImpl;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import id.ac.ui.cs.advprog.profile.model.UserProfile;
+import id.ac.ui.cs.advprog.profile.repository.ProfileRepository;
 
 @ExtendWith(MockitoExtension.class)
-class ProfileServiceImplTest {
-    @InjectMocks
-    ProfileServiceImpl profileService;
+public class ProfileServiceImplTest {
 
     @Mock
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
-    private UserProfile createUserProfile(String name, String email, String password) {
-        return new UserProfile.UserBuilder()
-                .setUserName(name)
-                .setPassword(password)
-                .setEmail(email)
-                .build();
-    }
+    @InjectMocks
+    private ProfileServiceImpl profileService;
 
-    @BeforeEach
-    void setUp() {
-        // Setup can be done here if needed
+    @Test
+    void testCreate_HappyPath() {
+        UserProfile user = new UserProfile();
+        user.setId("1");
+
+        when(profileRepository.save(user)).thenReturn(user);
+
+        CompletableFuture<UserProfile> futureUser = profileService.create(user);
+
+        assertTrue(futureUser.join() != null);
+        assertEquals("1", futureUser.join().getId());
+        verify(profileRepository, times(1)).save(user);
     }
 
     @Test
-    void testCreateAndFind() throws ExecutionException, InterruptedException {
-        UserProfile userProfile = createUserProfile("John Doe", "john@example.com", "password");
+    void testFindAll_HappyPath() {
+        List<UserProfile> users = new ArrayList<>();
+        users.add(new UserProfile());
+        users.add(new UserProfile());
 
-        Mockito.when(profileRepository.save(userProfile)).thenReturn(userProfile);
-        profileService.create(userProfile);
+        when(profileRepository.findAll()).thenReturn(users);
 
-        Mockito.when(profileRepository.findAll()).thenReturn(List.of(userProfile));
-        CompletableFuture<List<UserProfile>> userListFuture = profileService.findAll();
-        List<UserProfile> userList = userListFuture.get();
+        CompletableFuture<List<UserProfile>> futureUsers = profileService.findAll();
 
-        assertFalse(userList.isEmpty());
-        UserProfile savedUser = userList.get(0);
-        assertEquals(userProfile.getId(), savedUser.getId());
-        assertEquals(userProfile.getUserName(), savedUser.getUserName());
-        assertEquals(userProfile.getEmail(), savedUser.getEmail());
+        assertEquals(2, futureUsers.join().size());
+        verify(profileRepository, times(1)).findAll();
     }
 
     @Test
-    void testFindAllIfEmpty() throws ExecutionException, InterruptedException {
-        List<UserProfile> userList = new ArrayList<>();
-        Mockito.when(profileRepository.findAll()).thenReturn(userList);
+    void testEdit_HappyPath() {
+        UserProfile user = new UserProfile();
+        user.setId("1");
 
-        CompletableFuture<List<UserProfile>> usersFuture = profileService.findAll();
-        List<UserProfile> users = usersFuture.get();
+        when(profileRepository.save(user)).thenReturn(user);
 
-        assertTrue(users.isEmpty());
+        CompletableFuture<UserProfile> futureUser = profileService.edit(user);
+
+        assertTrue(futureUser.join() != null);
+        assertEquals("1", futureUser.join().getId());
+        verify(profileRepository, times(1)).save(user);
     }
 
     @Test
-    void testFindAllIfMoreThanOneUser() throws ExecutionException, InterruptedException {
-        UserProfile userProfile1 = createUserProfile("John Doe", "john@example.com", "password");
-        UserProfile userProfile2 = createUserProfile("Jane Doe", "jane@example.com", "password");
+    void testDelete_HappyPath() {
+        String id = "1";
 
-        Mockito.when(profileRepository.save(userProfile1)).thenReturn(userProfile1);
-        profileService.create(userProfile1);
+        CompletableFuture<Void> futureVoid = profileService.delete(id);
 
-        Mockito.when(profileRepository.save(userProfile2)).thenReturn(userProfile2);
-        profileService.create(userProfile2);
-
-        Mockito.when(profileRepository.findAll()).thenReturn(List.of(userProfile1, userProfile2));
-        CompletableFuture<List<UserProfile>> userListFuture = profileService.findAll();
-        List<UserProfile> userList = userListFuture.get();
-
-        assertFalse(userList.isEmpty());
-        assertEquals(userProfile1.getId(), userList.get(0).getId());
-        assertEquals(userProfile2.getId(), userList.get(1).getId());
+        assertNull(futureVoid.join());
+        verify(profileRepository, times(1)).deleteById(id);
     }
 
     @Test
-    void testEditUser() throws ExecutionException, InterruptedException {
-        UserProfile userProfile = createUserProfile("John Doe", "john@example.com", "password");
-        Mockito.when(profileRepository.save(userProfile)).thenReturn(userProfile);
-        profileService.create(userProfile);
+    void testFindById_HappyPath() {
+        String id = "1";
+        UserProfile user = new UserProfile();
+        user.setId(id);
 
-        UserProfile editedUserProfile = new UserProfile.UserBuilder()
-                .setEmail("johnsmith@example.com")
-                .build();
-        profileService.edit(editedUserProfile);
+        when(profileRepository.findById(id)).thenReturn(Optional.of(user));
 
-        Mockito.when(profileRepository.findById(userProfile.getId())).thenReturn(Optional.of(editedUserProfile));
-        CompletableFuture<Optional<UserProfile>> resultUserFuture = profileService.findById(userProfile.getId());
-        Optional<UserProfile> resultUser = resultUserFuture.get();
+        CompletableFuture<Optional<UserProfile>> futureUser = profileService.findById(id);
 
-        assertTrue(resultUser.isPresent());
-        assertEquals(editedUserProfile.getId(), resultUser.get().getId());
-        assertEquals(editedUserProfile.getUserName(), resultUser.get().getUserName());
-        assertEquals(editedUserProfile.getEmail(), resultUser.get().getEmail());
-        Mockito.verify(profileRepository).save(editedUserProfile);
+        assertTrue(futureUser.join().isPresent());
+        assertEquals("1", futureUser.join().get().getId());
+        verify(profileRepository, times(1)).findById(id);
     }
 
     @Test
-    void testDeleteUser() throws ExecutionException, InterruptedException {
-        UserProfile userProfile = createUserProfile("John Doe", "john@example.com", "password");
-        Mockito.when(profileRepository.save(userProfile)).thenReturn(userProfile);
-        profileService.create(userProfile);
+    void testFindById_UnhappyPath() {
+        String id = "1";
 
-        profileService.delete(userProfile.getId());
+        when(profileRepository.findById(id)).thenReturn(Optional.empty());
 
-        Mockito.verify(profileRepository).deleteById(userProfile.getId());
+        CompletableFuture<Optional<UserProfile>> futureUser = profileService.findById(id);
+
+        assertFalse(futureUser.join().isPresent());
+        verify(profileRepository, times(1)).findById(id);
     }
 }
