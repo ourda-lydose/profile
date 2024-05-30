@@ -95,7 +95,7 @@ public class UserProfile {
 
         public UserBuilder setRole(String role){
             this.role = role;
-            if (this.role == "Admin"){
+            if (this.role.equals("Admin")){
                 setIsAdmin(true);
 
             }else{
